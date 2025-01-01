@@ -38,38 +38,8 @@
 
 @push('scripts')
   <script>
-    //ajax code for creatinng new user
-    $(document).ready(()=>{
-      $('#newUser').on('submit',(event)=>{
-        $('.error').text('');
-        //prevent from reload
-        event.preventDefault();
-        //getting the form data
-        form= $('#newUser')[0];
-        data= new FormData(form);
-        //ajax starts here
-        $.ajax({
-          type:"POST",
-          url:"{{ route('createUser') }}",
-          data:data,
-          processData:false,
-          contentType:false,
-          success: function (response){
-            form.reset();
-            $('#userCreate').modal('hide');
-            loadUserData();
-            // console.log(response.message);
-        },
-        error:function (error){
-          console.log(error);
-          if (error.responseJSON.errors) {
-            $.each(error.responseJSON.errors,function(key,value){
-              $('#'+key+'_error').html(value).addClass('text-danger');
-            });
-          };
-        },
-        });
-      });
+        $(document).ready(()=>{
+          createDataAjax('#userCreate','#newUser',"{{ route('createUser') }}",()=>{readDataAjax('/read-user',{},'name','email')});
     });
   </script>
 @endpush

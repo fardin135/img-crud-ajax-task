@@ -38,13 +38,13 @@ class SecondTaskController extends Controller
             $users = $query->get();
         }
         return response()->json([
-            'users' => $users,
+            'data' => $users,
         ]);
     }
 
     public function updateUser(User $id)
     {
-        return response()->json(['users' => $id]);
+        return response()->json(['data' => $id]);
     }
 
     public function updateUserPost(Request $request)

@@ -1,7 +1,7 @@
 <!-- Button trigger modal -->
 {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userUpdate">Update New User</button> --}}
 <!-- Modal -->
-<div class="modal fade" id="userUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -39,52 +39,28 @@
 @push('scripts')
   <script>
     $(document).ready(()=>{
-      $('#users-table').on('click', '.updateData', function () {
-        let id = $(this).attr('data-id'); // Correctly get the data-id attribute
-          // Fetch user data using AJAX
-              $.ajax({
-                  type: 'GET',
-                  url: '/update-user/' + id,
-                  success: (response) => {
-                      // Fill modal fields with data from the response
-                      // console.log(response);
-                      $('#update_id').val(response.users.id);
-                      $('#update_name').val(response.users.name);
-                      $('#update_email').val(response.users.email);
-                      $('#update_password').val(response.users.password);
-                      // Show the modal
-                    },
-                    error: (error) => {
-                      console.log(error.responseText);
-                    },
-              });
-      });
-        $('#updateUser').on('submit',(event)=>{
-          $('.error').text('');
-          event.preventDefault();
-          var form = $('#updateUser')[0];
-          var data = new FormData(form);
-            $.ajax({
-              type:'POST',
-              url:"{{ route('updateUserPost') }}",
-              data:data,
-              processData:false,
-              contentType:false,
-              success:(response)=>{
-                // console.log(response);
-                $('#userUpdate').modal('hide');
-                loadUserData();
-              },
-              error:(error)=>{
-                if (error.responseJSON.errors) {
-                  $.each(error.responseJSON.errors,function(key,value){
-                    $('#update_'+key+'_error').text(value).addClass('text-danger');
-                  });
-                };
-                // console.log(error);
-              },
-            });
-        });
+      // $('#users-table').on('click', '.updateData', function () {
+      //   let id = $(this).attr('data-id'); // Correctly get the data-id attribute
+      //     // Fetch user data using AJAX
+      //         $.ajax({
+      //             type: 'GET',
+      //             url: '/update-user/' + id,
+      //             success: (response) => {
+      //                 // Fill modal fields with data from the response
+      //                 // console.log(response);
+      //                 $('#update_id').val(response.users.id);
+      //                 $('#update_name').val(response.users.name);
+      //                 $('#update_email').val(response.users.email);
+      //                 $('#update_password').val(response.users.password);
+      //                 // Show the modal
+      //               },
+      //               error: (error) => {
+      //                 console.log(error.responseText);
+      //               },
+      //         });
+      // });createDataAjax(modalId,formId,url,loadData)
+      updateDataAjax('#users-table','/update-user','id','name','email')
+        createDataAjax('#updateModal','#updateUser','/update-user',()=>{readDataAjax('/read-user',{},'name','email')});
       });
   </script>
 @endpush

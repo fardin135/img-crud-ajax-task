@@ -16,6 +16,8 @@
     <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
 {{-- ajax jquery --}}
     <script src="{{ asset('ajax/jquery.js') }}" ></script>
+    {{-- custom ajax --}}
+    <script src="{{ asset('ajax/ajaxCustom.js') }}" ></script>
 
     @stack('scripts')
 </body>

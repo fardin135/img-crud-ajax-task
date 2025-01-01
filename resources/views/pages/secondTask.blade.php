@@ -30,67 +30,19 @@
 </div>
 @push('scripts')
 <script>
-    //making a function to load users data from data
-    function loadUserData(data = {}) {
-        var content = '';
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('readUser') }}",
-                data:data,
-                success: function (response) {
-                    // console.log(response.users);
-                    if (response.users.length>0) {
-                        for (let i = response.users.length - 1; i >= 0; i--) {
-                            let users = response.users[i];
-                            content +=
-                                `<tr>
-                                <td>${i+1}</td>
-                                <td>${users['name']}</td>
-                                <td>${users['email']}</td>
-                                <td><button class="btn btn-success updateData" data-id="${users.id}" data-bs-toggle="modal" data-bs-target="#userUpdate">Update</button></td>
-                                <button type="button" class="btn btn-success" >Update New User</button>
-                                <td><button class=" btn btn-danger deleteData" data-id="${users.id}">Delete</button></td>
-                                <tr>`
-                            }
-                            $('#users-table tbody').html(content);
-                    } else {
-                        $('#users-table tbody').html("<tr><td colspan='6'>No Data Found</td></tr>");
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                },
-            });
-    };
-
     $(document).ready(()=>{
-        //call the function to load the table data
-        loadUserData();
+        // render the data in the table
+         readDataAjax('/read-user',{},'name','email');
 
         //search option table manipulation DOM
-        $('#search').on('keyup',function(){
+        $('#search').on('input',function(){
             search = $('#search').val();
-            loadUserData({search});
+            console.log(search);
+            readDataAjax('/read-user',{search},'name','email');
         });
 
-        //delete operation using ajax
-        $('#users-table').on('click','.deleteData',function(){
-            event.preventDefault();
-            var id = $(this).attr('data-id');
-                $.ajax({
-                    url: '/delete-user/'+id,
-                    type:'GET',
-                    success:(response)=>{
-                        // alert(response.message);
-                        // alert(response.message);
-                        loadUserData();
-                    },
-                    error:(error)=>{
-                        console.log(error);
-                        // alert(error);
-                    },
-                });
-            });
+        // delete the data in the table
+        deleteDataAjax('#users-table','/delete-user',()=>{readDataAjax('/read-user',{},'name','email')});
     });
 </script>
 @endpush
