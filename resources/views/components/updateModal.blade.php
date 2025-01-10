@@ -19,7 +19,7 @@
               </div>
               <div class="mb-3">
                 <label for="update_email" class="form-label">Email address</label>
-                <input type="email" name="email" id="update_email" class="form-control" aria-describedby="emailHelp">
+                <input type="email" name="email" id="update_email" class="form-control" aria-describedby="emailHelp" disabled>
                 <span class="error" id="update_email_error"></span>
               </div>
               <div class="mb-3">
@@ -36,6 +36,9 @@
     </div>
   </div>
 </div>
+
+
+
 @push('scripts')
   <script>
     $(document).ready(()=>{

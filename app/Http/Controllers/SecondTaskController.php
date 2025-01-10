@@ -29,18 +29,23 @@ class SecondTaskController extends Controller
     public function readUser(Request $request)
     {
         $query = User::query();
-        //query for searching option
+        // Query for searching option
         if ($request->search) {
             $users = $query->where('name', 'LIKE', $request->search . '%')
                 ->orWhere('email', 'LIKE', $request->search . '%')
-                ->get();
+                ->paginate(10);
         } else {
-            $users = $query->get();
+            $users = $query->paginate(10);
         }
         return response()->json([
-            'data' => $users,
+            'data' => $users
+            // 'data' => $users->items(), // Send the paginated data
+            // 'current_page' => $users->currentPage(), // Current page number
+            // 'last_page' => $users->lastPage(), // Total pages
+            // 'total' => $users->total(), // Total items
         ]);
     }
+
 
     public function updateUser(User $id)
     {
@@ -51,13 +56,13 @@ class SecondTaskController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
             'password' => 'required|string|min:5',
         ]);
         $user = User::where('id', $request->update_id);
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'password' => $request->password,
         ]);
         return response()->json([
