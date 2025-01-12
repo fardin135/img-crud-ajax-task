@@ -45,6 +45,8 @@ function readDataAjax(url, data = {}, ...columns) {
             // Generate table rows
             if (response.data.data.length > 0) {
                 response.data.data.forEach((key, index) => {
+                    console.log(`key ${key}`);
+                    console.log(`index  ${index}`);
                     content += `<tr>
                         <td>${index + 1}</td>`;
                     columns.forEach(column => {
@@ -52,46 +54,34 @@ function readDataAjax(url, data = {}, ...columns) {
                     });
                     content += `<td>
                         <button class="btn btn-success updateData" data-id="${key.id}" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger deleteData" data-id="${key.id}">Delete</button>
-                    </td>
-                </tr>`;
+                                </td>
+                                    <td>
+                                        <button class="btn btn-danger deleteData" data-id="${key.id}">Delete</button>
+                                    </td>
+                                </tr>`;
                 });
                 $('#users-table tbody').html(content);
-                    // Function to generate pagination
-                    const currentPage = response.data.current_page;  // Get the current page number
-                    const lastPage = response.data.last_page;        // Get the total number of pages
-                    let paginationContent = '';  // String to hold the pagination HTML
-
-                    // 1. Previous button (Go to the previous page)
+                    const currentPage = response.data.current_page;
+                    const lastPage = response.data.last_page;
+                    let paginationContent = '';
+                    // Previous button
                     paginationContent += `<button class="btn ${currentPage > 1 ? 'btn-info' : 'btn-secondary disabled'} m-2 prevbtn" data-page="${currentPage - 1}">Previous</button>`;
-
-                    // 2. First page button (Show the first page if we're more than 3 pages away)
-                    if (currentPage > 3) {
-                        paginationContent += `<button class="btn btn-secondary m-2 currentBtn" data-page="1">1</button>`;  // First page button
-                        paginationContent += `<span class="m-2">...</span>`;  // Ellipsis to indicate skipped pages
-                    }
-
-                    // 3. Page buttons around the current page (Show pages before and after the current page)
-                    for (let i = Math.max(1, currentPage - 2); i <= Math.min(lastPage, currentPage + 2); i++) {
-                        // Display page numbers near the current page
-                        paginationContent += `<button class="btn ${i === currentPage ? 'btn-primary' : 'btn-secondary'} m-2 currentBtn" data-page="${i}">${i}</button>`;
-                    }
-
-                    // 4. Last page button (Show the last page if we're more than 3 pages away)
-                    if (currentPage < lastPage - 3) {
-                        paginationContent += `<span class="m-2">...</span>`;  // Ellipsis to indicate skipped pages
-                        paginationContent += `<button class="btn btn-secondary m-2 currentBtn" data-page="${lastPage}">${lastPage}</button>`;  // Last page button
-                    }
-
-                    // 5. Next button (Go to the next page)
+                        // current page with side two buttons
+                        for (let i = 1; i <= lastPage; i++) {
+                            //show first and last button with current page between two buttons(-2,-1,currentPage-i = 0,1,2)
+                            if (i === 1 || i === lastPage || Math.abs(currentPage - i) <= 2) {
+                                // console.log(`currentPage - i = ${currentPage - i}`);
+                                paginationContent += `<button class="btn ${i === currentPage ? 'btn-primary' : 'btn-secondary'} m-2 currentBtn" data-page="${i}">${i}</button>`;
+                            //ingore the rest of the buttons with a eclipse 
+                            } else if (Math.abs(currentPage - i) === 3) {
+                                paginationContent += `<span class="m-2">...</span>`;
+                            }
+                        }
+                    // Next button
                     paginationContent += `<button class="btn ${currentPage < lastPage ? 'btn-info' : 'btn-secondary disabled'} m-2 nextbtn" data-page="${currentPage + 1}">Next</button>`;
-
-                    // Update the pagination container with the generated content
+                    //showing the total items like data tables
                     $('.pagination-status').html(`<p class="m-2">Showing ${response.data.from} to ${response.data.to} of ${response.data.total} records</p>`);
                     $('.pagination-container').html(paginationContent);
-
             } else {
                 $('#users-table tbody').html("<tr><td colspan='6'>No Data Found</td></tr>");
             }

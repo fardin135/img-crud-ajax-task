@@ -46,16 +46,19 @@
 <script>
 $(document).ready(() => {
     // Initial page load
-    const loadPage = (page, search) => {
-        const params = { page, search };
-        readDataAjax('/read-user', params, 'name', 'email');
+    function loadPage (page, search) {
+        readDataAjax('/read-user', { page, search }, 'name', 'email');
     };
     
     if (history.state && (history.state.page || history.state.search)) {
-        const savedPage = history.state.page || 1;
-        const savedSearch = history.state.search || '';
+        const savedPage = history.state.page;
+        const savedSearch = history.state.search;
         $('#search').val(savedSearch); // Populate the search box
         loadPage(savedPage, savedSearch);
+            // Delete action with callback
+                deleteDataAjax('#users-table', '/delete-user', () => {
+                loadPage(savedPage, savedSearch);
+    });
     } else {
         loadPage(1, ''); // Default initial load
     }
@@ -77,13 +80,6 @@ $(document).ready(() => {
         const search = $('#search').val();
         loadPage(page, search);
         history.pushState({ search, page }, '', `/task-2?search=${search}&page=${page}`);
-    });
-
-    // Delete action with callback
-    deleteDataAjax('#users-table', '/delete-user', () => {
-        const search = $('#search').val();
-        const page = 1; // or maintain current page, as necessary
-        loadPage(page, search);
     });
 });
 

@@ -34,9 +34,9 @@ class SecondTaskController extends Controller
             $users = $query->where('name', 'LIKE', $request->search . '%')
                 ->orWhere('email', 'LIKE', $request->search . '%')
                 ->orderBy('created_at', 'desc')
-                ->paginate(5);
+                ->paginate(10);
         } else {
-            $users = $query->orderBy('created_at', 'desc')->paginate(5);
+            $users = $query->orderBy('created_at', 'desc')->paginate(10);
         }
         return response()->json([
             'data' => $users
