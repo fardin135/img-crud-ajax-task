@@ -47,4 +47,4 @@ Route::post('/enter-password', [ThirdTaskController::class, 'enterPassword'])->n
 
 
 
-Route::get('/read-user123', [SecondTaskController::class, 'readUser'])->name('readUser123');
+// Route::get('/read-user123', [SecondTaskController::class, 'readUser'])->name('readUser123');
